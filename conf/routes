@@ -7,6 +7,8 @@ GET     /                           controllers.Application.index
 GET     /task/                      controllers.Task.index
 POST    /task/create                controllers.Task.create
 GET     /task/create                controllers.Task.index
+GET     /task/edit                  controllers.Task.edit(id: Int)
+POST    /task/update                controllers.Task.update(id: Int)
 GET     /generate                   controllers.Application.generate
 
 # Map static resources from the /public folder to the /assets URL path

@@ -10,11 +10,15 @@ object Tasks {
   // connection
   val database = Database.forDataSource(DB.getDataSource())
 
-  // def findById(id : Int) = database.withTransaction { implicit session : Session =>
-  //   Tasks.filter(_.id == id).first
-  // }
+  def findById(id : Int) = database.withTransaction { implicit session: Session =>
+    Task.filter(_.taskId === id).first
+  }
 
   def create(e: TaskRow) = database.withTransaction { implicit session: Session =>
     Task.insert(e)
+  }
+
+  def update(e: TaskRow) = database.withTransaction { implicit session: Session => 
+    Task.update(e)
   }
 }

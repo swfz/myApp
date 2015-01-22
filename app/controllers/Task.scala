@@ -29,9 +29,6 @@ object Task extends Controller {
       )(TaskForm.apply)(TaskForm.unapply)
     )
 
-  // def index = Action { implicit request =>
-  //   Ok(views.html.main("title", "test"))
-  // }
   def index = Action { implicit request =>
     Ok(views.html.task.create(taskForm))
   }
@@ -54,6 +51,41 @@ object Task extends Controller {
         Tasks.create(task)
         Redirect(controllers.routes.Task.create).flashing(
           "success" -> "registered"
+        )
+      }
+    )
+  }
+
+  def edit(id : Int) = Action { implicit request =>
+    val task = Tasks.findById(id)
+    val status = if(task.status) 1 else 0
+
+    val form = TaskForm(
+      task.name.get,
+      task.description.get,
+      status,
+      task.categoryId
+    )
+    Ok(views.html.task.edit(taskForm.fill(form))(id))
+  }
+
+  def update(id : Int) = Action { implicit request =>
+    taskForm.bindFromRequest.fold(
+      hasErrors = { form =>
+        Ok(views.html.task.edit(form)(id))
+      },
+      success = { form =>
+        val task = TaskRow(
+          taskId      = id,
+          name        = Option( form.name ),
+          description = Option( form.description ),
+          status      = form.status == 1,
+          categoryId  = form.category_id,
+          lastUpdate  = new Timestamp(System.currentTimeMillis())
+        )
+        Tasks.update(task)
+        Redirect(controllers.routes.Task.edit(id)).flashing(
+          "success" -> "done update"
         )
       }
     )
