@@ -8,6 +8,8 @@ import play.api.data._
 import play.api.data.Forms._
 import org.joda.time._
 import java.sql.Timestamp
+import scala.runtime.ScalaRunTime._
+import models.Tables._
 
 
 case class TaskForm(
@@ -31,16 +33,28 @@ object Task extends Controller {
   //   Ok(views.html.main("title", "test"))
   // }
   def index = Action { implicit request =>
-    Ok(views.html.task.index("tesetmessage"))
+    Ok(views.html.task.create(taskForm))
   }
 
   def create = Action { implicit request =>
     taskForm.bindFromRequest.fold(
-      hasErrors = { form => 
+      hasErrors = { form =>
         Ok(views.html.task.create(form))
       },
       success = { form =>
-        Ok(views.html.task.index("susscess"))
+        println(stringOf(form))
+        val task = TaskRow(
+          taskId      = 0,
+          name        = Option( form.name ),
+          description = Option( form.description ),
+          status      = form.status == 1,
+          categoryId  = form.category_id,
+          lastUpdate  = new Timestamp(System.currentTimeMillis())
+        )
+        Tasks.create(task)
+        Redirect(controllers.routes.Task.create).flashing(
+          "success" -> "registered"
+        )
       }
     )
   }
