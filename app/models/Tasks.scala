@@ -14,11 +14,21 @@ object Tasks {
     Task.filter(_.taskId === id).first
   }
 
+  def find(name : String) = database.withTransaction { implicit session: Session =>
+    var tasks = Task.sortBy(_.name)
+    tasks = if (name.isEmpty) tasks else tasks.filter(_.name like s"%${name}%")
+    tasks.invoker.list
+  }
+
   def create(e: TaskRow) = database.withTransaction { implicit session: Session =>
     Task.insert(e)
   }
 
-  def update(e: TaskRow) = database.withTransaction { implicit session: Session => 
+  def update(e: TaskRow) = database.withTransaction { implicit session: Session =>
     Task.update(e)
+  }
+
+  def delete(id: Int) = database.withTransaction { implicit session: Session =>
+    Task.filter(_.taskId === id).delete
   }
 }

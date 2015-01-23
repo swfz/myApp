@@ -90,4 +90,11 @@ object Task extends Controller {
       }
     )
   }
+
+  def delete(id : Int) = Action { implicit request =>
+    Tasks.delete(id)
+    Redirect(controllers.routes.TaskSearch.index.url, Map("name" -> Seq(""))).flashing(
+      "success" -> s"ID : ${id}のデータを削除しました。"
+    )
+  }
 }

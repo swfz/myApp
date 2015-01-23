@@ -1,0 +1,43 @@
+@(form : Form[TaskSearchForm])(tasks : List[models.Tables.TaskRow] )(implicit flash: Flash)
+
+@main("search") {
+@helper.form(action = controllers.routes.TaskSearch.search, 'id ->"search", 'role -> "form", 'class -> "form-horizontal") {
+    <div class="container">
+      <fiedset>
+        <legend>Search</legend>
+        <td>@helper.inputText(form("name"), '_help -> "名前を入力してください")</td>
+        <div align="center"><input type="submit" value="検索" formmethod="POST" class="btn btn-primary"></div>
+      </fiedset>
+    </div>
+
+    @if(tasks) {
+      <div class="container">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <td>ID</td>
+                <td>名前</td>
+                <td>説明</td>
+                <td>ステータス</td>
+                <td>カテゴリID</td>
+              </tr>
+            </thead>
+            <tbody>
+              @for((task) <- tasks) {
+                <tr>
+                  <td><a href="edit?id=@task.taskId">@task.taskId</a></td>
+                  <td>@task.name</td>
+                  <td>@task.description</td>
+                  <td>@task.status</td>
+                  <td>@task.categoryId</td>
+                  <td><button form="search" formaction="@controllers.routes.Task.delete(task.taskId)" formmethod="POST" name="delete" value="@task.taskId" class="btn btn-danger" onclick="return confirm('削除します、よろしいですか？');">削除</button></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  }
+}
