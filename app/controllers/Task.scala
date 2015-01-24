@@ -39,7 +39,7 @@ object Task extends Controller {
         Ok(views.html.task.create(form))
       },
       success = { form =>
-        println(stringOf(form))
+        // println(stringOf(form))
         val task = TaskRow(
           taskId      = 0,
           name        = Option( form.name ),
@@ -58,13 +58,14 @@ object Task extends Controller {
 
   def edit(id : Int) = Action { implicit request =>
     val task = Tasks.findById(id)
-    val status = if(task.status) 1 else 0
+    // println(stringOf(task))
+    val status = if(task._4) 1 else 0
 
     val form = TaskForm(
-      task.name.get,
-      task.description.get,
+      task._2.get,
+      task._3.get,
       status,
-      task.categoryId
+      task._6
     )
     Ok(views.html.task.edit(taskForm.fill(form))(id))
   }
@@ -83,6 +84,8 @@ object Task extends Controller {
           categoryId  = form.category_id,
           lastUpdate  = new Timestamp(System.currentTimeMillis())
         )
+        // println("taskRow========================")
+        // println(stringOf(task))
         Tasks.update(task)
         Redirect(controllers.routes.Task.edit(id)).flashing(
           "success" -> "done update"

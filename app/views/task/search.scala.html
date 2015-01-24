@@ -1,4 +1,4 @@
-@(form : Form[TaskSearchForm])(tasks : List[models.Tables.TaskRow] )(implicit flash: Flash)
+@(form : Form[TaskSearchForm])(tasks : List[(Int, Option[String], Option[String], Boolean, Option[String], Int)] )(implicit flash: Flash)
 
 @main("search") {
 @helper.form(action = controllers.routes.TaskSearch.search, 'id ->"search", 'role -> "form", 'class -> "form-horizontal") {
@@ -20,18 +20,18 @@
                 <td>名前</td>
                 <td>説明</td>
                 <td>ステータス</td>
-                <td>カテゴリID</td>
+                <td>カテゴリ</td>
               </tr>
             </thead>
             <tbody>
               @for((task) <- tasks) {
                 <tr>
-                  <td><a href="edit?id=@task.taskId">@task.taskId</a></td>
-                  <td>@task.name</td>
-                  <td>@task.description</td>
-                  <td>@task.status</td>
-                  <td>@task.categoryId</td>
-                  <td><button form="search" formaction="@controllers.routes.Task.delete(task.taskId)" formmethod="POST" name="delete" value="@task.taskId" class="btn btn-danger" onclick="return confirm('削除します、よろしいですか？');">削除</button></td>
+                  <td><a href="edit?id=@task._1">@task._1</a></td>
+                  <td>@task._2</td>
+                  <td>@task._3</td>
+                  <td>@task._4</td>
+                  <td>@task._5</td>
+                  <td><button form="search" formaction="@controllers.routes.Task.delete(task._1)" formmethod="POST" name="delete" value="@task._1" class="btn btn-danger" onclick="return confirm('削除します、よろしいですか？');">削除</button></td>
                 </tr>
               }
             </tbody>
