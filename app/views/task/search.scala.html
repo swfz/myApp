@@ -29,7 +29,7 @@
                   <td><a href="edit?id=@task._1">@task._1</a></td>
                   <td>@task._2</td>
                   <td>@task._3</td>
-                  <td>@task._4</td>
+                  <td>@if( task._4 ){Done}else{Untreated}</td>
                   <td>@task._5</td>
                   <td><button form="search" formaction="@controllers.routes.Task.delete(task._1)" formmethod="POST" name="delete" value="@task._1" class="btn btn-danger" onclick="return confirm('削除します、よろしいですか？');">削除</button></td>
                 </tr>

@@ -7,12 +7,18 @@
         <legend>Create Form</legend>
         <td>@helper.inputText(form("name"), '_help -> "名前を入力してください")</td>
         <td>@helper.inputText(form("description"), '_help -> "説明を入力してください")</td>
-        <td>@helper.inputText(form("status"), '_help -> "ステータスを入力してください")</td>
-        <!-- <td>@helper.inputText(form("category_id"), '_help -> "カテゴリを入力してください")</td> -->
+        <td>
+          @helper.inputRadioGroup(
+            form("status"),
+            options = Seq( "0" -> "Untreated", "1" -> "Done" ),
+            '_help -> "完了？"
+          )
+        </td>
         <td>
           @helper.select(
             form("category_id"),
-            options = Categories.options
+            options = Categories.options,
+            '_help -> "分類を選択してください"
           )
         </td>
         <div align="center"><input type="submit" value="登録" formmethod="POST" class="btn btn-primary"></div>
