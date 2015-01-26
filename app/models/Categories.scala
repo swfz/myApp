@@ -12,7 +12,7 @@ object Categories {
   val database = Database.forDataSource(DB.getDataSource())
 
   def options: Seq[(String,String)] = database.withTransaction { implicit session: Session =>
-    Category.sortBy(_.categoryId).list.map(c => c.categoryId.toString -> c.name.toString )
+    Category.sortBy(_.categoryId).list.map(c => c.categoryId.toString -> c.name.get )
   }
   def all() = database.withTransaction { implicit session: Session =>
     Category.sortBy(_.categoryId).list
