@@ -1,4 +1,4 @@
-@(form : Form[TaskSearchForm])(tasks : List[(Int, Option[String], Option[String], Boolean, Option[String], Int)] )(implicit flash: Flash)
+@(form : Form[TaskSearchForm])(tasks : List[(Int, Option[String], Option[String], Boolean, Option[String], Int, java.sql.Timestamp)] )(implicit flash: Flash)
 
 @import BootstrapHelper._
 @main("search") {
@@ -23,6 +23,7 @@
                 <td>説明</td>
                 <td>ステータス</td>
                 <td>カテゴリ</td>
+                <td>期日</td>
               </tr>
             </thead>
             <tbody>
@@ -33,6 +34,7 @@
                   <td>@task._3</td>
                   <td>@if( task._4 ){Done}else{Untreated}</td>
                   <td>@task._5</td>
+                  <td>@task._7</td>
                   <td><button form="search" formaction="@controllers.routes.Task.delete(task._1)" formmethod="POST" name="delete" value="@task._1" class="btn btn-danger" onclick="return confirm('削除します、よろしいですか？');">削除</button></td>
                 </tr>
               }

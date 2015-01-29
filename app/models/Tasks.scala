@@ -16,7 +16,7 @@ object Tasks {
       t <- Task if (t.taskId === id)
       c <- Category
       if t.categoryId === c.categoryId
-    } yield (t.taskId,t.name,t.description,t.status,c.name,c.categoryId)
+    } yield (t.taskId,t.name,t.description,t.status,c.name,c.categoryId,t.limit)
     // println(stringOf(joinedTask))
     // println(joinedTask.selectStatement)
     joinedTask.invoker.first
@@ -27,7 +27,7 @@ object Tasks {
       t <- Task if (t.name like s"%${name}%")
       c <- Category
       if t.categoryId === c.categoryId
-    } yield (t.taskId,t.name,t.description,t.status,c.name,c.categoryId)
+    } yield (t.taskId,t.name,t.description,t.status,c.name,c.categoryId,t.limit)
     joinedTasks.invoker.list
   }
 

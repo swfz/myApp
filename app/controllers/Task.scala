@@ -10,13 +10,15 @@ import org.joda.time._
 import java.sql.Timestamp
 import scala.runtime.ScalaRunTime._
 import models.Tables._
+import java.sql.Timestamp._
 
 
 case class TaskForm(
     name        : String,
     description : String,
     status      : Int,
-    category_id : Int
+    category_id : Int,
+    limit       : java.util.Date
 )
 
 object Task extends Controller {
@@ -25,7 +27,8 @@ object Task extends Controller {
         "name"        -> nonEmptyText(maxLength = 50),
         "description" -> nonEmptyText(maxLength = 500),
         "status"      -> number,
-        "category_id" -> number
+        "category_id" -> number,
+        "limit"       -> date
       )(TaskForm.apply)(TaskForm.unapply)
     )
 
@@ -45,6 +48,7 @@ object Task extends Controller {
           name        = Option( form.name ),
           description = Option( form.description ),
           status      = form.status == 1,
+          limit       = new java.sql.Timestamp( form.limit.getTime() ),
           categoryId  = form.category_id,
           lastUpdate  = new Timestamp(System.currentTimeMillis())
         )
@@ -65,7 +69,8 @@ object Task extends Controller {
       task._2.get,
       task._3.get,
       status,
-      task._6
+      task._6,
+      task._7
     )
     Ok(views.html.task.edit(taskForm.fill(form))(id))
   }
@@ -82,6 +87,7 @@ object Task extends Controller {
           description = Option( form.description ),
           status      = form.status == 1,
           categoryId  = form.category_id,
+          limit       = new java.sql.Timestamp( form.limit.getTime() ),
           lastUpdate  = new Timestamp(System.currentTimeMillis())
         )
         // println("taskRow========================")

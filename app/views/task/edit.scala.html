@@ -24,6 +24,13 @@
             '_help -> "分類を選択してください"
           )
         </td>
+        <td>
+          @helper.inputDate(
+            form("limit"),
+            'class -> "form-control",
+            '_help -> "期限を入力してください"
+          )
+        </td>
         <div align="center"><input type="submit" value="登録" formmethod="POST" class="btn btn-primary"></div>
       </fiedset>
     </div>

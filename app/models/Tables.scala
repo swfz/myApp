@@ -45,18 +45,19 @@ trait Tables {
    *  @param description Database column description DBType(TEXT), Length(65535,true), Default(None)
    *  @param status Database column status DBType(BIT), Default(false)
    *  @param categoryId Database column category_id DBType(INT), Default(1)
+   *  @param limit Database column limit DBType(DATETIME)
    *  @param lastUpdate Database column last_update DBType(TIMESTAMP) */
-  case class TaskRow(taskId: Int, name: Option[String] = Some(""), description: Option[String] = None, status: Boolean = false, categoryId: Int = 1, lastUpdate: java.sql.Timestamp)
+  case class TaskRow(taskId: Int, name: Option[String] = Some(""), description: Option[String] = None, status: Boolean = false, categoryId: Int = 1, limit: java.sql.Timestamp, lastUpdate: java.sql.Timestamp)
   /** GetResult implicit for fetching TaskRow objects using plain SQL queries */
   implicit def GetResultTaskRow(implicit e0: GR[Int], e1: GR[Option[String]], e2: GR[Boolean], e3: GR[java.sql.Timestamp]): GR[TaskRow] = GR{
     prs => import prs._
-    TaskRow.tupled((<<[Int], <<?[String], <<?[String], <<[Boolean], <<[Int], <<[java.sql.Timestamp]))
+    TaskRow.tupled((<<[Int], <<?[String], <<?[String], <<[Boolean], <<[Int], <<[java.sql.Timestamp], <<[java.sql.Timestamp]))
   }
   /** Table description of table task. Objects of this class serve as prototypes for rows in queries. */
   class Task(_tableTag: Tag) extends Table[TaskRow](_tableTag, "task") {
-    def * = (taskId, name, description, status, categoryId, lastUpdate) <> (TaskRow.tupled, TaskRow.unapply)
+    def * = (taskId, name, description, status, categoryId, limit, lastUpdate) <> (TaskRow.tupled, TaskRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (taskId.?, name, description, status.?, categoryId.?, lastUpdate.?).shaped.<>({r=>import r._; _1.map(_=> TaskRow.tupled((_1.get, _2, _3, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (taskId.?, name, description, status.?, categoryId.?, limit.?, lastUpdate.?).shaped.<>({r=>import r._; _1.map(_=> TaskRow.tupled((_1.get, _2, _3, _4.get, _5.get, _6.get, _7.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
     
     /** Database column task_id DBType(INT), AutoInc, PrimaryKey */
     val taskId: Column[Int] = column[Int]("task_id", O.AutoInc, O.PrimaryKey)
@@ -68,6 +69,8 @@ trait Tables {
     val status: Column[Boolean] = column[Boolean]("status", O.Default(false))
     /** Database column category_id DBType(INT), Default(1) */
     val categoryId: Column[Int] = column[Int]("category_id", O.Default(1))
+    /** Database column limit DBType(DATETIME) */
+    val limit: Column[java.sql.Timestamp] = column[java.sql.Timestamp]("limit")
     /** Database column last_update DBType(TIMESTAMP) */
     val lastUpdate: Column[java.sql.Timestamp] = column[java.sql.Timestamp]("last_update")
   }
